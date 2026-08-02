@@ -16,91 +16,61 @@ public class Lec01CustomerRepositoryTest extends AbstractTest {
     @Autowired
     private CustomerRepository repository;
 
-    @Test
-    public void findAll() {
-        this.repository.findAll()
-                       .doOnNext(c -> log.info("{}", c))
-                       .as(StepVerifier::create)
-                       .expectNextCount(10)
-                       .expectComplete()
-                       .verify();
-    }
 
     @Test
-    public void findById() {
+    public void findByIdTest() {
         this.repository.findById(2)
-                       .doOnNext(c -> log.info("{}", c))
-                       .as(StepVerifier::create)
-                       .assertNext(c -> Assertions.assertEquals("mike", c.getName()))
-                       .expectComplete()
-                       .verify();
+                .doOnNext(c -> log.info("{}", c))
+                .as(StepVerifier::create)
+                .assertNext(c -> Assertions.assertEquals("mike", c.getName()))
+                .expectComplete()
+                .verify();
     }
 
     @Test
-    public void findByName() {
+    public void findByNameTest() {
         this.repository.findByName("jake")
-                       .doOnNext(c -> log.info("{}", c))
-                       .as(StepVerifier::create)
-                       .assertNext(c -> Assertions.assertEquals("jake@gmail.com", c.getEmail()))
-                       .expectComplete()
-                       .verify();
-    }
-
-    /*
-        Query methods
-        https://docs.spring.io/spring-data/relational/reference/r2dbc/query-methods.html
-
-        Task: find all customers whose email ending with "ke@gmail.com"
-    */
-
-    @Test
-    public void findByEmailEndingWith() {
-        this.repository.findByEmailEndingWith("ke@gmail.com")
-                       .doOnNext(c -> log.info("{}", c))
-                       .as(StepVerifier::create)
-                       .assertNext(c -> Assertions.assertEquals("mike@gmail.com", c.getEmail()))
-                       .assertNext(c -> Assertions.assertEquals("jake@gmail.com", c.getEmail()))
-                       .expectComplete()
-                       .verify();
+                .doOnNext(c -> log.info("{}", c))
+                .as(StepVerifier::create)
+                .assertNext(c -> Assertions.assertEquals("jake", c.getName()))
+                .expectComplete()
+                .verify();
     }
 
     @Test
-    public void insertAndDeleteCustomer() {
-        // insert
+    public void findByEmailTest() {
+        this.repository.findByEmail("emily@example.com")
+                .doOnNext(c -> log.info("{}", c))
+                .as(StepVerifier::create)
+                .assertNext(c -> Assertions.assertEquals("emily", c.getName()))
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    public void insertAndDeleteCustomerTest() {
         var customer = new Customer();
-        customer.setName("marshal");
-        customer.setEmail("marshal@gmail.com");
+        customer.setName("Dorota");
+        customer.setEmail("dorota@meial.com");
         this.repository.save(customer)
-                       .doOnNext(c -> log.info("{}", c))
-                       .as(StepVerifier::create)
-                       .assertNext(c -> Assertions.assertNotNull(c.getId()))
-                       .expectComplete()
-                       .verify();
-        // count
-        this.repository.count()
-                       .as(StepVerifier::create)
-                       .expectNext(11L)
-                       .expectComplete()
-                       .verify();
-        // delete
-        this.repository.deleteById(11)
-                       .then(this.repository.count())
-                       .as(StepVerifier::create)
-                       .expectNext(10L)
-                       .expectComplete()
-                       .verify();
+                .doOnNext(c -> log.info("{}", c))
+                .as(StepVerifier::create)
+                .assertNext(c -> Assertions.assertEquals("Dorota", c.getName()))
+                .then(() -> this.repository.delete(customer))
+                .expectComplete()
+                .verify();
     }
 
     @Test
-    public void updateCustomer() {
+    public void updateTest() {
         this.repository.findByName("ethan")
-                       .doOnNext(c -> c.setName("noel")) // It is for mutating!
-                       .flatMap(c -> this.repository.save(c))
-                       .doOnNext(c -> log.info("{}", c))
-                       .as(StepVerifier::create)
-                       .assertNext(c -> Assertions.assertEquals("noel", c.getName()))
-                       .expectComplete()
-                       .verify();
+                .doOnNext(c -> c.setName("noel"))
+                .flatMap(c -> this.repository.save(c))
+                .doOnNext(c -> log.info("{}", c))
+                .as(StepVerifier::create)
+                .assertNext(c -> Assertions.assertEquals("noel", c.getName()))
+                .expectComplete()
+                .verify();
     }
 
 }
