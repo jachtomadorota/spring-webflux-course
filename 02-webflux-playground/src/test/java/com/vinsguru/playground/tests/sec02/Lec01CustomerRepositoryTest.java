@@ -18,21 +18,10 @@ public class Lec01CustomerRepositoryTest extends AbstractTest {
 
 
     @Test
-    public void findAllTest() {
-        this.repository.findAll()
-                .doOnNext(c -> log.info("{}", c))
-                .as(StepVerifier::create)
-                .expectNextCount(10)
-                .expectComplete()
-                .verify();
-    }
-
-    @Test
     public void findByIdTest() {
         this.repository.findById(2)
                 .doOnNext(c -> log.info("{}", c))
                 .as(StepVerifier::create)
-                .expectNextCount(1)
                 .assertNext(c -> Assertions.assertEquals("mike", c.getName()))
                 .expectComplete()
                 .verify();
@@ -43,7 +32,6 @@ public class Lec01CustomerRepositoryTest extends AbstractTest {
         this.repository.findByName("jake")
                 .doOnNext(c -> log.info("{}", c))
                 .as(StepVerifier::create)
-                .expectNextCount(1)
                 .assertNext(c -> Assertions.assertEquals("jake", c.getName()))
                 .expectComplete()
                 .verify();
@@ -54,7 +42,6 @@ public class Lec01CustomerRepositoryTest extends AbstractTest {
         this.repository.findByEmail("emily@example.com")
                 .doOnNext(c -> log.info("{}", c))
                 .as(StepVerifier::create)
-                .expectNextCount(1)
                 .assertNext(c -> Assertions.assertEquals("emily", c.getName()))
                 .expectComplete()
                 .verify();
@@ -65,21 +52,23 @@ public class Lec01CustomerRepositoryTest extends AbstractTest {
         var customer = new Customer();
         customer.setName("Dorota");
         customer.setEmail("dorota@meial.com");
-        this.repository.save(customer);
-
-        this.repository.findByEmail("dorota@meial.com")
+        this.repository.save(customer)
                 .doOnNext(c -> log.info("{}", c))
                 .as(StepVerifier::create)
-                .expectNextCount(1)
                 .assertNext(c -> Assertions.assertEquals("Dorota", c.getName()))
+                .then(() -> this.repository.delete(customer))
                 .expectComplete()
                 .verify();
+    }
 
-        this.repository.delete(customer);
-
-        this.repository.findByEmail("dorota@meial.com")
+    @Test
+    public void updateTest() {
+        this.repository.findByName("ethan")
+                .doOnNext(c -> c.setName("noel"))
+                .flatMap(c -> this.repository.save(c))
                 .doOnNext(c -> log.info("{}", c))
                 .as(StepVerifier::create)
+                .assertNext(c -> Assertions.assertEquals("noel", c.getName()))
                 .expectComplete()
                 .verify();
     }

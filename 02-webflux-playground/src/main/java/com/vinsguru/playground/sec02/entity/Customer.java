@@ -14,17 +14,17 @@ import org.springframework.data.relational.core.mapping.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name = "customer")
+@Table(name = "CUSTOMER")
 public class Customer {
 
     @Id
-    @Column(value = "id")
+    @Column(value = "ID")
     Integer id;
 
-    @Column(value = "name")
+    @Column(value = "NAME")
     String name;
 
-    @Column(value = "email")
+    @Column(value = "EMAIL")
     String email;
 
 }
