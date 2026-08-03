@@ -12,10 +12,8 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface CustomerRepository extends ReactiveCrudRepository<Customer, Integer> {
 
-    @Modifying // for demo
-    @Query("delete from customer where id=:id")
-    Mono<Boolean> deleteCustomerById(Integer id);
+        Flux<Customer> findBy(Pageable pageable);
 
-    Flux<Customer> findBy(Pageable pageable);
-
+        @Modifying
+        Mono<Boolean> deleteCustomerById(Integer id);
 }
