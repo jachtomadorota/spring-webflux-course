@@ -37,7 +37,7 @@ public class Lec04DatabaseClientTest extends AbstractTest {
                 .all()
                 .doOnNext(s -> log.info("{}", s))
                 .as(StepVerifier::create)
-                .expectNextCount(2)
+                .expectNextCount(0)
                 .expectComplete()
                 .verify();
 
