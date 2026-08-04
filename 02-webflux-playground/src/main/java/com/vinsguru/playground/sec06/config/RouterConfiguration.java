@@ -1,5 +1,6 @@
 package com.vinsguru.playground.sec06.config;
 
+import com.vinsguru.playground.sec06.exceptions.CustomerNotFoundException;
 import com.vinsguru.playground.sec06.handler.CustomerRequestHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 public class RouterConfiguration {
 
     private final CustomerRequestHandler handler;
+    private final ApplicationExceptionHandler exceptionHandler;
 
     @Bean
     public RouterFunction<ServerResponse> customerRoutes() {
@@ -22,6 +24,7 @@ public class RouterConfiguration {
                 .POST("/customers", handler::saveCustomer)
                 .PUT("/customers/{id}", handler::updateCustomer)
                 .DELETE("/customers/{id}", handler::deleteCustomer)
+                .onError(CustomerNotFoundException.class, exceptionHandler::handleException)
                 .build();
     }
 
