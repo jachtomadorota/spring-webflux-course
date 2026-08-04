@@ -1,5 +1,6 @@
 package com.vinsguru.playground.sec06.config;
 
+import com.vinsguru.playground.sec06.exceptions.InvalidInputException;
 import com.vinsguru.playground.sec06.exceptions.CustomerNotFoundException;
 import com.vinsguru.playground.sec06.handler.CustomerRequestHandler;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class RouterConfiguration {
                 .PUT("/customers/{id}", handler::updateCustomer)
                 .DELETE("/customers/{id}", handler::deleteCustomer)
                 .onError(CustomerNotFoundException.class, exceptionHandler::handleException)
+                .onError(InvalidInputException.class, exceptionHandler::handleException)
                 .build();
     }
 
