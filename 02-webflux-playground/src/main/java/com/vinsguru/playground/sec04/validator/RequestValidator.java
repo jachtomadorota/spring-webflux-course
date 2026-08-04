@@ -12,9 +12,9 @@ public class RequestValidator {
 
     public static UnaryOperator<Mono<CustomerDto>> validate() {
         return mono -> mono.filter(hasName())
-                           .switchIfEmpty(ApplicationExceptions.missingName())
-                           .filter(hasValidEmail())
-                           .switchIfEmpty(ApplicationExceptions.missingValidEmail());
+                .switchIfEmpty(ApplicationExceptions.missingName())
+                .filter(hasValidEmail())
+                .switchIfEmpty(ApplicationExceptions.missingValidEmail());
     }
 
     private static Predicate<CustomerDto> hasName() {

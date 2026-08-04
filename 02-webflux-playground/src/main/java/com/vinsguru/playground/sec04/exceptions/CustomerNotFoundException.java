@@ -2,10 +2,12 @@ package com.vinsguru.playground.sec04.exceptions;
 
 public class CustomerNotFoundException extends RuntimeException {
 
-    private static final String MESSAGE = "Customer [id=%d] is not found";
+    private static final String MESSAGE = "Customer [id=%s] is not found";
+    public CustomerNotFoundException(String message) {
+        super(message);
+    }
 
     public CustomerNotFoundException(Integer id) {
         super(MESSAGE.formatted(id));
     }
-
 }
