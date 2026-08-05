@@ -5,16 +5,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
 
-public class Lec02FluxTest extends AbstractWebClient {
+public class Lec04DefaultHeadersTest extends AbstractWebClient {
 
-    private final WebClient webClient = this.createWebClient();
+    private final WebClient webClient = this.createWebClient(builder -> builder.defaultHeader("caller-id", "test-service"));
 
     @Test
-    public void fluxTest() {
+    public void defaultHeaderTest() {
         webClient.get()
-                .uri("/lec02/product/stream")
+                .uri("/lec04/product/{id}", 1)
                 .retrieve()
-                .bodyToFlux(Product.class)
+                .bodyToMono(Product.class)
                 .doOnError(print())
                 .then()
                 .as(StepVerifier::create)

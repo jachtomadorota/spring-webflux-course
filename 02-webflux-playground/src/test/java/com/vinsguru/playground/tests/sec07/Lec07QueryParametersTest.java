@@ -5,15 +5,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
 
-public class Lec08BearerAuthTest extends AbstractWebClient {
+public class Lec07QueryParametersTest extends AbstractWebClient {
 
-
-    private final WebClient webClient = this.createWebClient();
+    private final WebClient webClient = this.createWebClient(builder -> builder.defaultHeader("caller-id", "test-service"));
 
     @Test
     public void uriBuilderVariablesTest() {
+        var path = "/lec06/calculator";
+        var query = "first={first}&second={second}&operation={operation}";
         webClient.get()
-                .uri("/lec08/product/{id}", 1)
+                .uri(builder -> builder.path(path).query(query).build(10, 20, "+"))
                 .retrieve()
                 .bodyToMono(Product.class)
                 .doOnError(print())
