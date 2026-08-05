@@ -14,19 +14,16 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
-    public Flux<ProductDto> saveProducts(Flux<ProductDto> flux) {
-        return flux.map(EntityDtoMapper::toEntity)
-                   .as(this.repository::saveAll)
-                   .map(EntityDtoMapper::toDto);
+
+
+    public Flux<ProductDto> saveProducts(Flux<ProductDto> dtos) {
+        return dtos.map(EntityDtoMapper::toEntity)
+                .as(repository::saveAll)
+                .map(EntityDtoMapper::toDto);
     }
 
-    public Mono<Long> getProductsCount() {
-        return this.repository.count();
-    }
-
-    public Flux<ProductDto> allProducts() {
-        return this.repository.findAll()
-                              .map(EntityDtoMapper::toDto);
+    public Mono<Long> getCount() {
+        return repository.count();
     }
 
 }
